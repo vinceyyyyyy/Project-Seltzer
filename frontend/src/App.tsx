@@ -1,25 +1,35 @@
 import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import "./App.css";
-import Counter from "./components/counter";
+import { createBrowserRouter, RouterProvider, Route } from "react-router-dom";
+
+import Root from "./routes/Root";
+import Inventory from "./pages/inventory";
+import Scan from "./pages/scan";
+import Wishlist from "./pages/wishlist";
+
+const menuItems = [
+  { name: "Inventory", path: "/inventory" },
+  { name: "Scan", path: "/scan" },
+  { name: "Wishlist", path: "/wishlist" },
+];
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <Root menuItems={menuItems} />,
+    children: [
+      { path: "inventory", element: <Inventory /> },
+      { path: "scan", element: <Scan /> },
+      { path: "wishlist", element: <Wishlist /> },
+    ],
+  },
+]);
 
 function App() {
   const [count, setCount] = useState(0);
 
   return (
-    <div className="text-center">
-      <header className="m-4">
-        <p>Hello Vite + React!</p>
-        <p>
-          <button
-            className="border border-orange-400 rounded px-4 py-2 mt-4 hover:(bg-teal-400 border-orange-400)"
-            onClick={() => setCount((count) => count + 1)}
-          >
-            count is: {count}
-          </button>
-        </p>
-      </header>
-      <Counter />
+    <div className={"w-full"}>
+      <RouterProvider router={router} />
     </div>
   );
 }
