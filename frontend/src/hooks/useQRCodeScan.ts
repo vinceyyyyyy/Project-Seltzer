@@ -68,7 +68,7 @@ export default function useQRCodeScan({
       // eslint-disable-next-line
       const html5qrCodeScanner = new Html5Qrcode(qrcodeMountNodeID, {
         experimentalFeatures: {
-          useBarCodeDetectorIfSupported: false,
+          useBarCodeDetectorIfSupported: true,
         },
         verbose: true,
       });
