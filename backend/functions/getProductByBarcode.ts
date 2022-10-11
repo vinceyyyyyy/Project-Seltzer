@@ -1,5 +1,5 @@
 import getRequest from "../helpers/getRequest";
-import { APIGatewayProxyEventV2, APIGatewayProxyResultV2, Handler } from "aws-lambda";
+import { APIGatewayProxyEvent, APIGatewayProxyResult, Context } from "aws-lambda";
 
 /**
  *
@@ -10,51 +10,27 @@ import { APIGatewayProxyEventV2, APIGatewayProxyResultV2, Handler } from "aws-la
  * @returns {Object} object - API Gateway Lambda Proxy Output Format
  *
  */
+export const lambdaHandler = async (event: APIGatewayProxyEvent, context: Context): Promise<APIGatewayProxyResult> => {
+  const barcode = event.queryStringParameters;
 
-export const lambdaHandler = async (event: BarcodeRequestDTO): Promise<BarcodeResponseDTO> => {
-  const barcode = event.barcode;
-
-  // must have payload
-  if (!barcode) return { statusCode: 400, message: "No barcode payload" };
+  // must have query parameters
+  if (!barcode) throw new Error("No barcode payload");
 
   // payload bust be legal
-  if (!barcode.type || !barcode.data)
-    return {
-      statusCode: 400,
-      message: "Barcode payload must have type and data properties",
-    };
+  if (!barcode.type || !barcode.data) throw new Error("Barcode payload must have type and data properties");
 
   const r = (await getRequest(`https://api.upcitemdb.com/prod/trial/lookup?${barcode.type}=${barcode.data}`)) as any;
 
   // vendor API blows up
-  if (r.code !== "OK") return { statusCode: 500, message: JSON.stringify(r) };
+  if (r.code !== "OK") throw new Error(JSON.stringify(r));
+
+  // cannot accurately locate the product
+  if (r.items.length !== 1) throw new Error("Cannot accurately locate the product");
 
   return {
     statusCode: 200,
-    body: JSON.stringify(r),
+    body: JSON.stringify(
+      r.items[0] as { title: string; description: string; upc: string; brand: string; image: string },
+    ),
   };
 };
-
-type BarcodeRequestDTO = APIGatewayProxyEventV2 & {
-  barcode: {
-    type: string;
-    data: string;
-  };
-};
-
-type goodBarcodeResponseDTO = {
-  statusCode: 200;
-  body: string;
-  // {
-  //     code: string;
-  //     total: number;
-  //     items: { title: string; description: string; upc: string; brand: string; image: string }[];
-  // };
-};
-
-type badBarcodeResponseDTO = {
-  statusCode: number;
-  message: string;
-};
-
-type BarcodeResponseDTO = goodBarcodeResponseDTO | badBarcodeResponseDTO;
