@@ -1,11 +1,11 @@
-import { useState, useEffect, useRef } from "react";
-import { Html5Qrcode } from "html5-qrcode";
+import {useState, useRef} from "react";
+import {Html5Qrcode} from "html5-qrcode";
 
 export default function useQRCodeScan({
-  qrcodeMountNodeID = "",
-  closeAfterScan = true,
-  qrCodeScannerDimension,
-}: {
+                                        qrcodeMountNodeID = "",
+                                        closeAfterScan = true,
+                                        qrCodeScannerDimension,
+                                      }: {
   qrcodeMountNodeID?: string;
   closeAfterScan?: boolean;
   qrCodeScannerDimension: { width: number; height: number };
@@ -25,26 +25,11 @@ export default function useQRCodeScan({
   });
   const html5QrCodeScannerRef = useRef<Html5Qrcode | null>(null);
 
-  // unmount logic
-  useEffect(() => {
-    return () => {
-      if (html5QrCodeScannerRef.current) {
-        html5QrCodeScannerRef.current
-          ?.stop()
-          ?.then((ignore) => {
-            // QR Code scanning is stopped
-            console.log("stopped after successful scan");
-          })
-          ?.catch((err) => {
-            // Stop failed, handle it.
-            console.log("fails to stop after successfull scan result ");
-          });
-      }
-    };
-  }, []);
 
   function stopQrCode() {
-    if (html5QrCodeScannerRef.current) {
+    console.log("at stop: ", html5QrCodeScannerRef.current, decodedQRData.isScanning)
+    if (html5QrCodeScannerRef.current && decodedQRData.isScanning) {
+      console.log("stop runs")
       html5QrCodeScannerRef.current
         ?.stop()
         ?.then((ignore) => {
@@ -53,12 +38,19 @@ export default function useQRCodeScan({
         })
         ?.catch((err) => {
           // Stop failed, handle it.
-          console.log("fails to stop after successfull scan result ");
+          console.log("fails to stop after successful scan result ");
         });
+
+      html5QrCodeScannerRef.current = null;
+      setDecodedQrData({
+        ...decodedQRData,
+        isScanning: false,
+      });
     }
   }
 
   function startQrCode() {
+
     try {
       setDecodedQrData({
         ...decodedQRData,
@@ -78,9 +70,9 @@ export default function useQRCodeScan({
       html5qrCodeScanner
         .start(
           // { deviceId: { exact: cameraId } },
-          { facingMode: "environment" },
+          {facingMode: "environment"},
 
-          { fps: 10, qrbox: qrCodeScannerDimension },
+          {fps: 10, qrbox: qrCodeScannerDimension},
           (qrCodeMessage) => {
             // do something when code is read
             window.alert(`scanned qr code, ${qrCodeMessage}`);
@@ -107,7 +99,8 @@ export default function useQRCodeScan({
                 });
             }
           },
-          (errorMessage) => {}
+          (errorMessage) => {
+          }
         )
         .catch((err) => {
           setDecodedQrData({

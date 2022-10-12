@@ -3,12 +3,12 @@ import React, { useEffect } from "react";
 import useQRCodeScan from "../../hooks/useQRCodeScan";
 
 export default function Scan() {
-  const { startQrCode, decodedQRData } = useQRCodeScan({
+  const { startQrCode, decodedQRData, stopQrCode } = useQRCodeScan({
     qrcodeMountNodeID: "qrcode-scanner",
     qrCodeScannerDimension: { width: 400, height: 400 },
   });
 
-  useEffect(() => startQrCode, []);
+  useEffect(() => {startQrCode(); return stopQrCode}, []);
 
   return (
     <div className="container mx-auto">
