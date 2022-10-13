@@ -2,7 +2,7 @@
   "name": "project_seltzer",
   "version": "0.0.1",
   "description": "Serverless backend for a stupid seltzer management system",
-  "main": "functions/getProductByBarcode.ts",
+  "main": "functions/logItem.ts",
   "repository": "https://github.com/awslabs/aws-sam-cli/tree/develop/samcli/local/init/templates/cookiecutter-aws-sam-hello-nodejs",
   "author": "SAM CLI",
   "license": "MIT",

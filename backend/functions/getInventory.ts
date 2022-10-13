@@ -1,6 +1,7 @@
 import { DynamoDBClient, ScanCommand, ScanCommandInput } from "@aws-sdk/client-dynamodb";
 import { unmarshall } from "@aws-sdk/util-dynamodb";
-import { APIGatewayProxyEvent, APIGatewayProxyResult, Context } from "aws-lambda";
+import { APIGatewayProxyResult } from "aws-lambda";
+import { SeltzerDTO } from "../DTOs/Seltzer.dto";
 
 export const lambdaHandler = async (): Promise<APIGatewayProxyResult> => {
   try {
@@ -14,7 +15,7 @@ export const lambdaHandler = async (): Promise<APIGatewayProxyResult> => {
   }
 };
 
-async function getInventory(): Promise<Seltzer[]> {
+async function getInventory(): Promise<SeltzerDTO[]> {
   const client = new DynamoDBClient({ region: "us-east-1" });
   const params: ScanCommandInput = {
     TableName: "seltzers",
@@ -27,14 +28,8 @@ async function getInventory(): Promise<Seltzer[]> {
 
   try {
     const result = await client.send(command);
-    return result.Items?.map((item) => unmarshall(item)) as Seltzer[];
+    return result.Items?.map((item) => unmarshall(item)) as SeltzerDTO[];
   } catch (err) {
     throw new Error("DB error: " + err);
   }
-}
-
-interface Seltzer {
-  brand: string;
-  flavor: string;
-  isInStock: boolean;
 }
