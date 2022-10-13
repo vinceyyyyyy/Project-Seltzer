@@ -5,6 +5,8 @@ import {
   GetItemCommandInput,
   PutItemCommand,
   PutItemCommandInput,
+  UpdateItemCommand,
+  UpdateItemCommandInput,
 } from "@aws-sdk/client-dynamodb";
 import { unmarshall, marshall } from "@aws-sdk/util-dynamodb";
 import * as https from "https";
@@ -12,13 +14,11 @@ import * as https from "https";
 import { SeltzerDTO } from "../DTOs/Seltzer.dto";
 
 /**
- *
  * Event doc: https://docs.aws.amazon.com/apigateway/latest/developerguide/set-up-lambda-proxy-integrations.html#api-gateway-simple-proxy-for-lambda-input-format
  * @param {Object} event - API Gateway Lambda Proxy Input Format
  *
  * Return doc: https://docs.aws.amazon.com/apigateway/latest/developerguide/set-up-lambda-proxy-integrations.html
  * @returns {Object} object - API Gateway Lambda Proxy Output Format
- *
  */
 export const lambdaHandler = async (event: APIGatewayProxyEvent, context: Context): Promise<APIGatewayProxyResult> => {
   const barcode = event.queryStringParameters;
@@ -31,7 +31,10 @@ export const lambdaHandler = async (event: APIGatewayProxyEvent, context: Contex
 
   // get item from DB
   const localItem = await getItemFromDB(barcode.data);
-  if (localItem) return { statusCode: 200, body: JSON.stringify(localItem) };
+  if (localItem) {
+    await updateItem(localItem);
+    return { statusCode: 200, body: JSON.stringify(localItem) };
+  }
 
   // item does not exists in DB, get from vendor
   const r = (await getItemFromVendor(
@@ -53,7 +56,7 @@ export const lambdaHandler = async (event: APIGatewayProxyEvent, context: Contex
     inStockHistory: [new Date(Date.now()).toUTCString()],
     flavor: "",
   };
-  await addItemToDB(item);
+  await createItem(item);
 
   return {
     statusCode: 200,
@@ -61,13 +64,33 @@ export const lambdaHandler = async (event: APIGatewayProxyEvent, context: Contex
   };
 };
 
-async function addItemToDB(item: SeltzerDTO) {
+async function createItem(item: SeltzerDTO) {
   const client = new DynamoDBClient({ region: "us-east-1" });
   const params: PutItemCommandInput = {
     TableName: "seltzers",
     Item: marshall(item),
   };
   const command = new PutItemCommand(params);
+
+  try {
+    await client.send(command);
+  } catch (err) {
+    throw new Error("DB error: " + err);
+  }
+}
+
+async function updateItem(item: SeltzerDTO) {
+  const client = new DynamoDBClient({ region: "us-east-1" });
+  const params: UpdateItemCommandInput = {
+    TableName: "seltzers",
+    Key: { upc: { S: item.upc } },
+    UpdateExpression: "set isInStock = :isInStock, inStockHistory = list_append(inStockHistory, :inStockHistory)",
+    ExpressionAttributeValues: {
+      ":isInStock": { BOOL: true },
+      ":inStockHistory": { L: [{ S: new Date(Date.now()).toUTCString() }] },
+    },
+  };
+  const command = new UpdateItemCommand(params);
 
   try {
     await client.send(command);
