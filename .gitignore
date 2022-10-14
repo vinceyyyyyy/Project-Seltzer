@@ -80,6 +80,7 @@ ENV/
 .idea/**/uiDesigner.xml
 .idea/**/gradle.xml
 .idea/**/libraries
+.idea/**/aws.xml
 *.iws /out/
 
 # Sublime Text

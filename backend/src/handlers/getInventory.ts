@@ -1,7 +1,7 @@
 import { DynamoDBClient, ScanCommand, ScanCommandInput } from "@aws-sdk/client-dynamodb";
 import { unmarshall } from "@aws-sdk/util-dynamodb";
 import { APIGatewayProxyResult } from "aws-lambda";
-import { SeltzerDTO } from "../DTOs/Seltzer.dto";
+import { SeltzerDTO } from "/opt/nodejs/Seltzer.dto";
 
 export const lambdaHandler = async (): Promise<APIGatewayProxyResult> => {
   try {

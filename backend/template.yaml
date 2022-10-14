@@ -9,13 +9,17 @@ Description: >
 Globals:
   Function:
     Timeout: 3
+    Layers:
+      # Our own layer that we are going to build
+      - !Ref RuntimeDependenciesLayer
+
 
 Resources:
-  GetProductByBarcodeFunction:
+  LogItemFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
-      CodeUri: functions/
-      Handler: getProductByBarcode.lambdaHandler
+      CodeUri: handlers/
+      Handler: logItem.lambdaHandler
       Runtime: nodejs16.x
       Architectures:
         - x86_64
@@ -31,7 +35,7 @@ Resources:
   GetInventoryFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
-      CodeUri: functions/
+      CodeUri: handlers/
       Handler: getInventory.lambdaHandler
       Runtime: nodejs16.x
       Architectures:
@@ -44,6 +48,17 @@ Resources:
         # Sourcemap: true # Enabling source maps will create the required NODE_OPTIONS environment variables on your lambda function during sam build
         EntryPoints:
           - getInventory.ts
+
+  RuntimeDependenciesLayer:
+    Type: AWS::Serverless::LayerVersion
+    Metadata:
+      BuildMethod: makefile # This does the trick
+    Properties:
+      Description: Runtime dependencies for Lambdas
+      ContentUri: ./
+      CompatibleRuntimes:
+        - nodejs16.x
+      RetentionPolicy: Retain
 
 Outputs:
   # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
