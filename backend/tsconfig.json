@@ -3,7 +3,7 @@
     "target": "esnext",
     "strict": true,
     "preserveConstEnums": true,
-    "noEmit": true,
+//    "noEmit": true,
     "sourceMap": false,
     "module": "commonjs",
     "moduleResolution": "node",
@@ -12,10 +12,10 @@
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
     "allowSyntheticDefaultImports":true,
-    "outDir": "./dist",
-    "rootDir": "./src"
+    "outDir": "dist",
+    "rootDir": "src"
   },
-  "include": [ "./**/*", "./**/*.json" ],
+  "include": [ "src/**/*.ts", "src/**/*.js" ],
   "exclude": [
     "node_modules",
     "**/*.test.ts"

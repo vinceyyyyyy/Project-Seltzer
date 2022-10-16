@@ -11,7 +11,7 @@ import {
 import { unmarshall, marshall } from "@aws-sdk/util-dynamodb";
 import * as https from "https";
 
-import { SeltzerDTO } from "/opt/nodejs/Seltzer.dto";
+import { SeltzerDTO } from "../utils/Seltzer.dto";
 
 /**
  * Event doc: https://docs.aws.amazon.com/apigateway/latest/developerguide/set-up-lambda-proxy-integrations.html#api-gateway-simple-proxy-for-lambda-input-format

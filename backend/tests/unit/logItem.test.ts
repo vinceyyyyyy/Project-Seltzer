@@ -1,6 +1,6 @@
 import { Context } from "aws-lambda";
 
-import { lambdaHandler } from "../../handlers/logItem";
+import { lambdaHandler } from "../../src/handlers/logItem";
 
 describe("Unit test for getProductByBarcode handler", function () {
   it("should get item from local DB", async () => {

@@ -1,4 +1,4 @@
-import { lambdaHandler } from "../../handlers/getInventory";
+import { lambdaHandler } from "../../src/handlers/getInventory";
 
 describe("Unit test for getItemsFromDB handler", function () {
   it("verifies successful response", async () => {
