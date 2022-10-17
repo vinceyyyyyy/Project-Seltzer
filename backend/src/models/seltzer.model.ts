@@ -32,7 +32,7 @@ export class Seltzer extends Item {
   title: string;
   brand: string;
   flavor: string;
-  isInStock: boolean;
+  isInStock: string;
   inStockHistory: string[];
 }
 
