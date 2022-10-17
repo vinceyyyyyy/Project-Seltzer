@@ -53,7 +53,7 @@ async function getSeltzerFromVendor(barcode: string) {
     title: vendorResult.items[0].title,
     brand: vendorResult.items[0].brand,
     isInStock: "x",
-    inStockHistory: [new Date(Date.now()).toUTCString()],
+    inStockHistory: [new Date().toISOString()],
     flavor: "",
   };
   await createSeltzer(newSeltzer);
