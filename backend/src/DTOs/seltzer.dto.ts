@@ -4,5 +4,5 @@ export interface SeltzerDTO {
   flavor: string;
   isInStock: boolean;
   upc: string;
-  inStockHistory: String[];
+  inStockHistory: string[];
 }

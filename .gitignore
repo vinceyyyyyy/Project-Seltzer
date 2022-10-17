@@ -81,6 +81,7 @@ ENV/
 .idea/**/gradle.xml
 .idea/**/libraries
 .idea/**/aws.xml
+.idea/**/httpRequests
 *.iws /out/
 
 # Sublime Text

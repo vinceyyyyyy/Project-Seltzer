@@ -15,7 +15,8 @@
   },
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.186.0",
-    "@aws-sdk/util-dynamodb": "^3.186.0"
+    "@aws-sdk/util-dynamodb": "^3.186.0",
+    "dynamoose": "^3.1.0"
   },
   "devDependencies": {
     "@types/aws-lambda": "^8.10.92",
