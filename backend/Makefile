@@ -1,10 +1,12 @@
 #.PHONY: build-RuntimeDependenciesLayer build-lambda-common
-.PHONY: build-LogItemFunction build-GetInventoryFunction
+.PHONY: build-LogItemFunction build-GetInventoryFunction build-RemoveFromInventoryFunction
 
 build-LogItemFunction:
 	$(MAKE) HANDLER=src/handlers/logItem.ts build-lambda-common
 build-GetInventoryFunction:
 	$(MAKE) HANDLER=src/handlers/getInventory.ts build-lambda-common
+build-RemoveFromInventoryFunction:
+	$(MAKE) HANDLER=src/handlers/removeFromInventory.ts build-lambda-common
 
 build-lambda-common:
 	npm install

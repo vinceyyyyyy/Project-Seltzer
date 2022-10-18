@@ -58,6 +58,27 @@ Resources:
             Path: /
             Method: GET
 
+  RemoveFromInventoryFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Metadata: # Manual build process
+      BuildMethod: makefile
+    Properties:
+      Handler: dist/handlers/removeFromInventory.lambdaHandler
+      Runtime: nodejs16.x
+      Architectures:
+        - x86_64
+      Policies:
+        # Give Create/Read/Update/Delete Permissions to the SampleTable
+        - DynamoDBCrudPolicy:
+            TableName: seltzers
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /
+            Method: PATCH
+
+
 #  RuntimeDependenciesLayer:
 #    Type: AWS::Serverless::LayerVersion
 #    Metadata:
@@ -71,5 +92,5 @@ Resources:
 
 Outputs:
   WebEndpoint:
-    Description: "API Gateway endpoint URL for Test stage"
-    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Test/"
+    Description: "API Gateway endpoint URL for Prod stage"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/"

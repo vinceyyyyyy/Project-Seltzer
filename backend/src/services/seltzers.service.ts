@@ -43,6 +43,14 @@ async function getSeltzerFromDB(barcode: string): Promise<Seltzer | undefined> {
   }
 }
 
+export async function removeSeltzerFromStock(barcode: string) {
+  try {
+    return SeltzerModel.update({ upc: barcode }, { $REMOVE: ["upc"] } as any);
+  } catch (err) {
+    throw new Error("DB error: " + err);
+  }
+}
+
 async function getSeltzerFromVendor(barcode: string) {
   const vendorResult = (await httpRequest(`https://api.upcitemdb.com/prod/trial/lookup?upc=${barcode}`)) as any;
   if (vendorResult.code !== "OK" || vendorResult.items.length === 0) throw new Error(JSON.stringify(vendorResult));

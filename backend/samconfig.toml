@@ -1,0 +1,12 @@
+version = 0.1
+[blend]
+[blend.deploy]
+[blend.deploy.parameters]
+stack_name = "seltzer-test"
+s3_bucket = "aws-sam-cli-managed-default-samclisourcebucket-n6briw2p3qd2"
+s3_prefix = "seltzer-test"
+region = "us-east-1"
+profile = "blend"
+capabilities = "CAPABILITY_IAM"
+disable_rollback = true
+image_repositories = []
