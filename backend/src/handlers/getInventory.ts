@@ -7,6 +7,9 @@ export const lambdaHandler = async (): Promise<APIGatewayProxyResult> => {
     const inventory = await getAllInStockSeltzers();
     return {
       statusCode: 200,
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+      },
       body: JSON.stringify(inventory),
     };
   } catch (err) {
