@@ -10,7 +10,8 @@ type Seltzer = {
   title: string;
   brand: string;
 };
-const columnHelper = createColumnHelper<Seltzer>();
+type SeltzerRow = Seltzer & { action: (rowID: number) => any };
+const columnHelper = createColumnHelper<SeltzerRow>();
 
 const columns = [
   columnHelper.accessor("title", {
@@ -19,11 +20,30 @@ const columns = [
   columnHelper.accessor("brand", {
     cell: (info) => info.getValue(),
   }),
+  columnHelper.accessor("action", {
+    cell: (info) => (
+      <button
+        value={info.row.id}
+        onClick={(e) => info.getValue()(parseInt(info.row.id))}
+      >
+        remove
+      </button>
+    ),
+  }),
 ];
 
-const defaultData: Seltzer[] = [{ title: "default", brand: "default" }];
+const defaultData: SeltzerRow[] = [
+  {
+    title: "default",
+    brand: "default",
+    action: () => window.alert("default"),
+  },
+];
 
-export default function Table(props: { seltzers: Seltzer[] }) {
+export default function Table(props: {
+  seltzers: Seltzer[];
+  action: (rowID: number) => any;
+}) {
   const [data, setData] = useState(() => [...defaultData]);
 
   const table = useReactTable({
@@ -33,7 +53,12 @@ export default function Table(props: { seltzers: Seltzer[] }) {
   });
 
   useEffect(() => {
-    setData(props.seltzers);
+    setData(
+      props.seltzers.map((seltzer) => ({
+        ...seltzer,
+        action: props.action,
+      }))
+    );
   }, [props.seltzers]);
 
   return (

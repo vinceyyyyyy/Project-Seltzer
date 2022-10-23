@@ -45,7 +45,7 @@ async function getSeltzerFromDB(barcode: string): Promise<Seltzer | undefined> {
 
 export async function removeSeltzerFromStock(barcode: string) {
   try {
-    return SeltzerModel.update({ upc: barcode }, { $REMOVE: ["upc"] } as any);
+    return SeltzerModel.update({ upc: barcode }, { $REMOVE: ["isInStock"] } as any);
   } catch (err) {
     throw new Error("DB error: " + err);
   }

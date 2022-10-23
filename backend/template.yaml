@@ -15,7 +15,6 @@ Globals:
     MemorySize: 128
     Timeout: 100
 
-
 Resources:
   LogItemFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
