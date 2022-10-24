@@ -10,7 +10,7 @@ import { getSeltzer } from "../services/seltzers.service";
  * @returns {Object} object - API Gateway Lambda Proxy Output Format
  */
 export const lambdaHandler = async (event: APIGatewayProxyEvent, context: Context): Promise<APIGatewayProxyResult> => {
-  const upcBarcode = JSON.parse(event.body ?? "").upc as string;
+  const upcBarcode = JSON.parse(event.body ?? "{}").upc as string;
 
   // must have query parameters
   if (!upcBarcode) throw new Error("No barcode payload");
